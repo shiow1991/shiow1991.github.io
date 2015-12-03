@@ -1,0 +1,74 @@
+body{
+    font-family: 'PT Sans', sans-serif;
+}
+.axis text {
+    font: 10px sans-serif;
+}
+
+.axis line,
+.axis path {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+
+#import_path {
+    stroke: red;
+    stroke-width: 3px;
+    fill:none;
+}
+
+
+.import_point {
+    fill: red;
+}
+
+#export_path {
+    stroke: green;
+    stroke-width: 3px;
+    fill: none;
+}
+
+.export_point {
+    fill: green;
+}
+
+#info {
+    display:table;
+    margin:0 auto;
+}
+
+
+ul {
+    list-style-type: none;
+    margin-left:0 ;
+    margin-top: 80%;
+    padding: 0;
+
+}
+.input-color {
+    position:relative;
+}
+.input-color .color-box {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    background-color: #ccc;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+}
+
+.input-color span{
+    margin-left: 20px;
+}
+
+.col-md-4{
+    width: 43%
+}
+
+.col-md-2{
+    width: 2%
+
+}

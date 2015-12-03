@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title> USA International Trade</title>
+
+    <script src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
+    <script src="http://code.jquery.com/jquery-2.1.4.js" charset="utf-8"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="http://d3js.org/queue.v1.min.js"></script>
+    <!-- Get some nice font-->
+    <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css' />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+
+
+    <link rel="stylesheet" href="css/myStyle.css"/>
+    <!-- js for this project-->
+    <script src="js/annualvis.js"></script>
+    <script src="js/detailvis.js"></script>
+    <script src="js/countryvis.js"></script>
+    <script src="js/biPartite.js"></script>
+
+</head>
+
+<body>
+    <button type="botton" id="all">all click</button>
+    <div class="container">
+        <h1> USA International Trade</h1>
+        <div class="row">
+            <div class="col-md-12">
+                <svg id="annual" width="1000" height="300">
+                    <g id="annual_graph" transform="translate(80,10)">
+                        <path id="import_path"/>
+                        <path id="export_path"/>
+                    </g>
+                </svg>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <svg id="country" width="500" height="400">
+
+                </svg>
+            </div>
+            <div class="col-md-4">
+                <svg id="detail" width="500" height="400">
+                </svg>
+            </div>
+            <div class="col-md-2">
+                <ul>
+                    <ul>
+                        <li>
+                            <div class="input-color">
+                                <div class="color-box" style="background-color: rgb(253,141,60);"></div>
+                                <span>Household</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="input-color">
+                                <div class="color-box" style="background-color: rgb(230, 85, 13);"></div>
+                                <span>Machinery</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="input-color">
+                                <div class="color-box" style="background-color: rgb(198, 219, 239);"></div>
+                                <span>Industrial</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="input-color">
+                                <div class="color-box" style="background-color: rgb(158, 202, 225);"></div>
+                                <span>Energy</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="input-color">
+                                <div class="color-box" style="background-color: rgb(107, 174, 214);"></div>
+                                <span>Foods</span>
+                            </div>
+                        </li>
+                    </ul>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6"></div>
+            <div class="col-md-4">
+                <span id="info"> 2014 USA total import and export: 485 billion</span>
+            </div>
+            <div class="col-md-2">
+            </div>
+        </div>
+
+    </div>
+    <script src="js/main.js"></script>
+</body>
+</html>
