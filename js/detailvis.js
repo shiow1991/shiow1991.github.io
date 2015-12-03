@@ -1,10 +1,11 @@
-function DetailVis(_svg, _data) {
+function DetailVis(_svg, _data, _eventHandler) {
     var self = this;
 
     detailObj = this;
 
     self.svg = _svg;
     self.data = _data;
+    self.eventHandler = _eventHandler;
     self.selectedYear = 2014;
     self.selectedCountry = null;
     self.selectedCategory = null;
@@ -51,12 +52,13 @@ DetailVis.prototype.initVis = function(){
     self.updateVis();
 };
 
-
 DetailVis.prototype.updateVis = function(){
     var self = detailObj;
     self.wrangleData();
 
     function arcTween(d) {
+        //console.log("Data:");
+        //console.log(d)
         var xd = d3.interpolate(self.xScale.domain(), [d.x, d.x + d.dx]),
             yd = d3.interpolate(self.yScale.domain(), [d.y, 1]),
             yr = d3.interpolate(self.yScale.range(), [d.y ? 20 : 0, self.radius]);
@@ -90,8 +92,8 @@ DetailVis.prototype.updateVis = function(){
     }
 
     function click (d) {
-        console.log("Click data:");
-        console.log(d);
+        //console.log("Click");
+        //console.log(d);
         if(d == self.selectedData)
             self.level = 0;
         else
@@ -142,12 +144,18 @@ DetailVis.prototype.updateVis = function(){
             return self.color((d.children ? d : d.parent).name);
         })
         .style("fill-rule", "evenodd")
-        .on("click", click)
+        .on("click", function(d){
+            click(d);
+            console.log(d);
+            self.eventHandler.onCategoryChange(d["name"]);
+        })
         .on("mouseover",showInfo)
         .on("mouseout",function(){
             d3.select("#info").text(self.stashedInfo);
         });
     path = self.svg.selectAll("path");
+    //console.log("Path");
+    //console.log(path);
 
     // some trick to enable animation. not sure how to customize arcTween to satisfy my need
     if(self.level == -1){
@@ -161,6 +169,12 @@ DetailVis.prototype.updateVis = function(){
         path.transition().duration(1000).attrTween("d",arcTween(self.selectedData));
         self.level = 0;
     }
+    path[0].forEach(function(d, i){
+        if (d["__data__"]["name"] == self.selectedCategory){
+            //console.log(d["__data__"]);
+            click(d["__data__"], path);
+        }
+    });
 };
 
 DetailVis.prototype.wrangleData = function(){
@@ -286,11 +300,7 @@ DetailVis.prototype.onCountryChange = function(country){
 
 DetailVis.prototype.onCategoryChange = function(category){
     var self = detailObj;
-
+    console.log("Category " + category );
     self.selectedCategory = category;
-    self.svg.selectAll("path").forEach(function(d, i){
-        if (d.name == category){
-            self.updateVis().click(d);
-        }
-    });
+    self.updateVis();
 };

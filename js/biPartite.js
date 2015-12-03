@@ -154,7 +154,7 @@
 			h.append("text").text(header[d]).attr("x", (c1[d]-5))
 				.attr("y", -5).style("fill","grey");
 
-			h.append("text").text("Total ($10^9)").attr("x", (c2[d]-35))
+			h.append("text").text("Total ($Billion)").attr("x", (c2[d]-35))
 				.attr("y", -5).style("fill","grey");
 
 			h.append("line").attr("x1",c1[d]-10).attr("y1", -2)
@@ -253,19 +253,89 @@
 						return bP.deSelectSegment(data, p, i);
 					})
 					.on("click", function(d, i){
-						obj.isClickSelected = true;
 						if (p == 1) {
-							obj.eventHandler.onCountryChange(d3.keys(obj.data[obj.selectedYear])[i]);
+							if (p == obj.selectedPartID && i == obj.selectedItemID){
+								obj.eventHandler.onCategoryChange(null);
+								obj.otherItemID = null;
+								//obj.showStatus();
+							}
+							else {
+								obj.eventHandler.onCountryChange(d3.keys(obj.data[obj.selectedYear])[i]);
+								if (obj.isClickSelected == false){
+									obj.isClickSelected = true;
+									obj.selectedPartID = p;
+								}
+								if (p == obj.selectedPartID){
+									obj.selectedItemID = i;
+								}
+								else{
+									obj.otherItemID = i;
+								}
+							}
 						}
 						else if (p == 0){
-							console.log("onCategoryChange");
+							if (p == obj.selectedPartID && i == obj.selectedItemID){
+								obj.eventHandler.onCountryChange(null);
+								obj.otherItemID = null;
+								//obj.showStatus();
+							}
+							else {
+								obj.eventHandler.onCategoryChange(d3.keys(obj.data[2005]["Canada"])[i]);
+								//obj.eventHandler.onCountryChange(null);
+								if (obj.isClickSelected == false){
+									obj.isClickSelected = true;
+									obj.selectedPartID = p;
+								}
+								if (p == obj.selectedPartID){
+									obj.selectedItemID = i;
+								}
+								else{
+									obj.otherItemID = i;
+								}
+
+							}
 						}
-						bP.releaseAll();
-						return bP.selectSegment(data, p, i);
+						if (p == obj.selectedPartID){
+							bP.releaseAll();
+						}
+						else{
+							bP.releaseExceptFor(p, i);
+							obj.otherItemID = i;
+							bP.emphasize(p, i);
+							obj.showStatus();
+							return;
+						}
+						bP.selectSegment(data, p, i);
+						//console.log("Other Item ID: " + self.otherItemID);
+						//if (self.otherItemID == null)	return;
+						bP.emphasize(1 - p, obj.otherItemID);
+						obj.showStatus();
 					});
+					//.on("contextmenu", function(d, i){
+					//	console.log("Right Click");
+					//	console.log(obj.data);
+					//	var InsertData = [];
+					//	obj.data.forEach(function(dd, ii){
+					//		if (p == 1) {
+					//			InsertData.push(0);
+					//			var country = d3.keys(dd[2005])[i];
+                    //
+					//		}
+					//		else{
+					//			InsertData.push(0);
+					//			d.forEach(function(dd, ii){
+                    //
+					//			})
+					//		}
+					//	};
+					//	//Show InsertData
+					//	);
+                    //
+                    //
+					//});
 			});
 		});
-		d3.select("#all")
+		d3.select("#Status")
 			.on("click", function(){
 				console.log("click")
 				obj.isClickSelected = false;
@@ -274,7 +344,32 @@
 					transition(visualize(k.data), k.id);
 				});
 				obj.eventHandler.onCountryChange(null);
+				obj.eventHandler.onCategoryChange(null);
+				obj.selectedPartID = null;
+				obj.selectedItemID = null;
+				obj.otherItemID = null;
+				obj.showStatus();
 			});
+	};
+
+	bP.releaseExceptFor = function(p, i){
+		var selectedBar = d3.select("#CountryCategories").select(".part"+p).select(".mainbars")
+			.selectAll(".mainbar").filter(function(dd,ii){ return (ii!=i);});
+
+		selectedBar.select(".mainrect").style("stroke-opacity",0);
+		selectedBar.select(".barlabel").style('font-weight','normal');
+		selectedBar.select(".barvalue").style('font-weight','normal');
+		selectedBar.select(".barpercent").style('font-weight','normal');
+	};
+
+	bP.emphasize = function(p, i){
+		var selectedBar = d3.select("#CountryCategories").select(".part"+p).select(".mainbars")
+			.selectAll(".mainbar").filter(function(dd,ii){ return (ii==i);});
+
+		selectedBar.select(".mainrect").style("stroke-opacity",1);
+		selectedBar.select(".barlabel").style('font-weight','bold');
+		selectedBar.select(".barvalue").style('font-weight','bold');
+		selectedBar.select(".barpercent").style('font-weight','bold');
 	};
 
 	bP.releaseAll = function(){
@@ -288,6 +383,8 @@
 	};
 
 	bP.selectSegment = function(data, m, s){
+		//console.log("select");
+		//console.log(data);
 		data.forEach(function(k){
 			var newdata =  {keys:[], data:[]};
 

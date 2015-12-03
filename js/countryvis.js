@@ -11,6 +11,9 @@ function CountryVis(_svg, _data, _eventHandler) {
     self.rightKeys = [];
     self.eventHandler = _eventHandler;
     self.isClickSelected = false;
+    self.selectedPartID = null;
+    self.selectedItemID = null;
+    self.otherItemID = null;
     self.selectedData = {
         "keys": [],
         "data":[]
@@ -64,6 +67,7 @@ CountryVis.prototype.updateVis = function(){
     data[0]["data"]["keys"][1] = temparr;
 
     bP.draw(data, self.svg, countryObj);
+    self.showStatus();
  };
 
 CountryVis.prototype.wrangleData = function(){
@@ -111,10 +115,51 @@ CountryVis.prototype.initiateData = function(){
     self.selectedData["data"].push(rightToLeft);
 };
 
+CountryVis.prototype.showStatus = function(){
+    var self = countryObj;
+    var statusSpan = d3.select("#Status");
+    var text = "Information Status: ";
+    if (self.selectedYear != null){
+        text += "Year: <b>" + self.selectedYear + "</b>";
+    }
+    console.log("Show Information " + self.selectedPartID + " " + self.selectedItemID + " " + self.otherItemID);
+
+    if (self.selectedPartID != null){
+        if (self.selectedPartID == 1){
+            text += " Country: <b>" + d3.keys(self.data[2005])[self.selectedItemID] + "</b>";
+            if (self.otherItemID != null){
+                text += " Category: <b>" + d3.keys(self.data[2005]["Canada"])[self.otherItemID] + "</b>";
+            }
+            else{
+                text += " with all categories";
+            }
+        }
+        else{
+            if (self.otherItemID == null){
+                text += " with all countries, ";
+            }
+            else{
+                text += " Country: <b>" + d3.keys(self.data[2005])[self.otherItemID] + "</b>";
+            }
+            text += " Category: <b>" + d3.keys(self.data[2005]["Canada"])[self.selectedItemID] + "</b>";
+        }
+    }
+    else{
+        text += " with all countries and all categories";
+    }
+    text += "<br> (Click the text to release selection)";
+    statusSpan.html(text);
+
+};
+
 
 CountryVis.prototype.onYearChange = function(year){
     var self = countryObj;
     self.selectedYear = year;
     self.updateVis();
+};
+
+CountryVis.prototype.onCategoryChange = function(category){
+    var self = countryObj;
 
 };

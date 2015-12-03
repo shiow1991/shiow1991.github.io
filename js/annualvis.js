@@ -54,6 +54,24 @@ AnnualVis.prototype.wrangleData = function(){
     self.displayData = arr;
 };
 
+AnnualVis.prototype.addLine = function(InsertData){
+    var self = annualObj;
+
+    var LineGenerator = d3.svg.line()
+        .x(function (d, i) {
+            return self.xScale(new Date(i+2005,0, 0, 0, 0, 0, 0));
+        })
+        .y(function (d) {
+            return self.yScale(d);
+        });
+
+    self.svg.append("path")
+        .attr("d",LineGenerator(InsertData))
+        .on("click", function(){
+            d3.select(this).remove();
+        });
+};
+
 AnnualVis.prototype.updateVis = function(){
     var self = annualObj;
 
@@ -97,6 +115,7 @@ AnnualVis.prototype.updateVis = function(){
             self.eventHandler.onYearChange(i+2005);
         })
         .on("mouseover",function(){
+            //if (d3.event.x )
             d3.select(this).transition().duration(300).attr("r","7");
             var x = d3.select(this).attr("cx");
             self.svg.select("#annual_graph").append("line")
@@ -113,6 +132,7 @@ AnnualVis.prototype.updateVis = function(){
             d3.select(this).transition().duration(300).attr("r","5");
             self.svg.select("#helpLine").remove();
         });
+
 
     self.svg.select("#annual_graph").append("g").selectAll("circle").data(self.displayData).enter().append("circle")
         .attr("cx",function(d,i){

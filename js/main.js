@@ -3,14 +3,16 @@
     var annualData, countryData;
 
     function initVis() {
-        var eventhandler = d3.dispatch("onYearChange","onCountryChange");
+        var eventhandler = d3.dispatch("onYearChange","onCountryChange", "onCategoryChange");
         var annualVis = new AnnualVis(d3.select("#annual"), annualData, eventhandler);
-        var detailVis = new DetailVis(d3.select("#detail"), countryData);
+        var detailVis = new DetailVis(d3.select("#detail"), countryData, eventhandler);
         var countryVis = new CountryVis(d3.select("#country"), countryData, eventhandler);
 
         eventhandler.on("onYearChange.detailVis",detailVis.onYearChange);
         eventhandler.on("onCountryChange.detailVis",detailVis.onCountryChange);
         eventhandler.on("onYearChange.countryVis",countryVis.onYearChange);
+        eventhandler.on("onCategoryChange.detailVis", detailVis.onCategoryChange);
+        eventhandler.on("onCategoryChange.countryVis", countryVis.onCategoryChange);
     }
 
     // call this function after both files are loaded -- error should be "null" if no error

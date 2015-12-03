@@ -72,3 +72,9 @@ ul {
     width: 2%
 
 }
+
+.video{
+    /*width: px;*/
+    margin-left: 500px;
+    margin-right: auto;
+}
